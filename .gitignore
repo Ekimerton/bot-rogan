@@ -9,3 +9,6 @@ env/
 
 # Python cache
 __pycache__/
+
+# Env vars
+env_vars
