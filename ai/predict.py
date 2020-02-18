@@ -2,6 +2,8 @@ import tensorflow as tf
 import numpy as np
 import os
 import time
+import random
+import tweepy
 
 print("Running tensorflow:", tf.__version__) # Make sure the version is 2.0 or above otherwise I die!!
 
@@ -10,6 +12,20 @@ vocab = [' ', '$', '%', '&', "'", '+', ',', '-', '.', '/', '0', '1', '2', '3', '
 char2idx = {u:i for i, u in enumerate(vocab)}
 idx2char = np.array(vocab)
 
+### Building model from preset weights
+vocab_size = len(vocab)
+embedding_dim = 256
+rnn_units = 1024
+BATCH_SIZE = 64
+
+consumer_token = os.environ['consumer_token']
+consumer_token_secret = os.environ['consumer_token_secret']
+access_token = os.environ['access_token']
+access_token_secret = os.environ['access_token_secret']
+
+auth = tweepy.OAuthHandler(consumer_token, consumer_token_secret)
+auth.set_access_token(access_token, access_token_secret)
+tp = tweepy.API(auth)
 
 # Function for building the model
 def build_model(vocab_size, embedding_dim, rnn_units, batch_size):
@@ -50,28 +66,32 @@ def generate_text(model, start_string, length, temperature=1.0):
         text_generated.append(idx2char[predicted_id])
     return (start_string + ''.join(text_generated))
 
-def generate_tweet(seed, tweet_length, temp):
-    ### Building model from preset weights
-    vocab_size = len(vocab)
-    embedding_dim = 256
-    rnn_units = 1024
-    BATCH_SIZE = 64
+def loss(labels, logits):
+    return tf.keras.losses.sparse_categorical_crossentropy(labels, logits, from_logits=True)
 
-    model = build_model(
-        vocab_size = len(vocab),
-        embedding_dim=embedding_dim,
-        rnn_units=rnn_units,
-        batch_size=BATCH_SIZE
-    )
+def get_seed():
+    seeds = ["martial", "chimps", "richard", "the government", "fight"]
+    return random.choice(seeds)
 
-    def loss(labels, logits):
-        return tf.keras.losses.sparse_categorical_crossentropy(labels, logits, from_logits=True)
+#model = build_model(
+ #   vocab_size = len(vocab),
+  #  embedding_dim=embedding_dim,
+   # rnn_units=rnn_units,
+    #batch_size=BATCH_SIZE
+#)
 
-    model.compile(optimizer='adam', loss=loss)
-    model = build_model(vocab_size, embedding_dim, rnn_units, batch_size=1)
+model = build_model(vocab_size, embedding_dim, rnn_units, batch_size=1)
+model.compile(optimizer='adam', loss=loss)
 
-    model.load_weights('ai/jre.h5')
+model.load_weights('jre.h5')
 
-    #model.build(tf.TensorShape([1, None]))
-    return(generate_text(model, start_string=seed + " ", length=tweet_length,
-                        temperature=temp))
+#model.build(tf.TensorShape([1, None]))
+print("Starting tweet loop")
+while True:
+    seed = get_seed()
+    tweet = generate_text(model, start_string=seed + " ", length=140,
+                          temperature=0.7)
+    tweet = "Seed phrase: " + seed + '\n' + tweet
+    print(tweet)
+    tp.update_status(tweet)
+    time.sleep(60 * 60 * 12)
