@@ -1,2 +1,2 @@
 web: gunicorn app:app
-worker: ai/predict.py
+worker: python ai/predict.py
