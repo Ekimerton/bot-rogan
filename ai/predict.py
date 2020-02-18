@@ -83,7 +83,7 @@ def get_seed():
 model = build_model(vocab_size, embedding_dim, rnn_units, batch_size=1)
 model.compile(optimizer='adam', loss=loss)
 
-model.load_weights('jre.h5')
+model.load_weights('ai/jre.h5')
 
 #model.build(tf.TensorShape([1, None]))
 print("Starting tweet loop")
