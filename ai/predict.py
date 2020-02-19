@@ -7,6 +7,11 @@ import tweepy
 
 print("Running tensorflow:", tf.__version__) # Make sure the version is 2.0 or above otherwise I die!!
 
+try:
+    tf.enable_eager_execution()
+except:
+    pass
+
 ### Dictionary for turning letters into numbers
 vocab = [' ', '"', '$', '%', '&', "'", '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '>', '@', '[', ']', '^', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'à', 'á', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ñ', 'ò', 'ó', 'õ', 'ö', 'ø', 'ú', 'ü', 'ÿ']
 char2idx = {u:i for i, u in enumerate(vocab)}
@@ -86,7 +91,7 @@ model.compile(optimizer='adam', loss=loss)
 
 model.load_weights('ai/jre.h5')
 
-#model.build(tf.TensorShape([1, None]))
+model.build(tf.TensorShape([1, None]))
 print("Starting tweet loop")
 while True:
     seed = get_seed()
