@@ -7,6 +7,7 @@ import tweepy
 
 print("Running tensorflow:", tf.__version__) # Make sure the version is 2.0 or above otherwise I die!!
 
+# Because heroku disables eager execution by default lol!!
 try:
     tf.enable_eager_execution()
 except:
@@ -17,7 +18,7 @@ vocab = [' ', '"', '$', '%', '&', "'", '+', ',', '-', '.', '/', '0', '1', '2', '
 char2idx = {u:i for i, u in enumerate(vocab)}
 idx2char = np.array(vocab)
 
-### Building model from preset weights
+# Parameters used for defining the model
 vocab_size = len(vocab)
 embedding_dim = 256
 rnn_units = 1024
@@ -79,12 +80,9 @@ def get_seed():
              "interesting"]
     return random.choice(seeds)
 
-#model = build_model(
- #   vocab_size = len(vocab),
-  #  embedding_dim=embedding_dim,
-   # rnn_units=rnn_units,
-    #batch_size=BATCH_SIZE
-#)
+def temp():
+    temps = [0.4, 0.5, 0.55 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 1, 1.1, 1.5]
+    return random.choice(temps)
 
 model = build_model(vocab_size, embedding_dim, rnn_units, batch_size=1)
 model.compile(optimizer='adam', loss=loss)
@@ -95,9 +93,10 @@ model.build(tf.TensorShape([1, None]))
 print("Starting tweet loop")
 while True:
     seed = get_seed()
+    temp = get_temp()
     tweet = generate_text(model, start_string=seed + " ", length=140,
                           temperature=0.7)
-    tweet = "Seed phrase: " + seed + '\n' + tweet
+    tweet = "Seed phrase: " + seed + ", temperature used: " + temp + '\n\n' + tweet
     print(tweet)
     tp.update_status(tweet)
     time.sleep(60 * 60 * 12)
