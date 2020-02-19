@@ -96,7 +96,7 @@ while True:
     temp = get_temp()
     tweet = generate_text(model, start_string=seed + " ", length=140,
                           temperature=0.7)
-    tweet = "Seed phrase: " + seed + ", temperature used: " + temp + '\n\n' + tweet
+    tweet = "Seed phrase: " + seed + ", temperature used: " + str(temp) + '\n\n' + tweet
     print(tweet)
     tp.update_status(tweet)
     time.sleep(60 * 60 * 6)
