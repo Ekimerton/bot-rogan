@@ -8,7 +8,7 @@ import tweepy
 print("Running tensorflow:", tf.__version__) # Make sure the version is 2.0 or above otherwise I die!!
 
 ### Dictionary for turning letters into numbers
-vocab = [' ', '$', '%', '&', "'", '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '>', '@', '[', ']', '^', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'à', 'á', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ñ', 'ò', 'ó', 'õ', 'ö', 'ø', 'ú', 'ü', 'ÿ']
+vocab = [' ', '"', '$', '%', '&', "'", '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '>', '@', '[', ']', '^', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'à', 'á', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ñ', 'ò', 'ó', 'õ', 'ö', 'ø', 'ú', 'ü', 'ÿ']
 char2idx = {u:i for i, u in enumerate(vocab)}
 idx2char = np.array(vocab)
 
@@ -70,7 +70,8 @@ def loss(labels, logits):
     return tf.keras.losses.sparse_categorical_crossentropy(labels, logits, from_logits=True)
 
 def get_seed():
-    seeds = ["martial", "chimps", "richard", "the government", "fight"]
+    seeds = ["martial", "chimps", "richard", "the government", "fight",
+             "interesting"]
     return random.choice(seeds)
 
 #model = build_model(
