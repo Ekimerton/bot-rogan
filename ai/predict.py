@@ -87,7 +87,7 @@ def get_temp():
 model = build_model(vocab_size, embedding_dim, rnn_units, batch_size=1)
 model.compile(optimizer='adam', loss=loss)
 
-model.load_weights('ai/jre.h5')
+model.load_weights('ai/jre_file55.h5')
 
 model.build(tf.TensorShape([1, None]))
 print("Starting tweet loop")
@@ -99,4 +99,4 @@ while True:
     tweet = "Seed phrase: " + seed + ", temperature used: " + str(temp) + '\n\n' + tweet
     print(tweet)
     tp.update_status(tweet)
-    time.sleep(60 * 60 * 6)
+    time.sleep(60 * 60 * 12)
